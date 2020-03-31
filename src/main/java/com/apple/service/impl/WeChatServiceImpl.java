@@ -1,6 +1,6 @@
 package com.apple.service.impl;
 
-import com.apple.Message.TextMessage;
+import com.apple.message.TextMessage;
 import com.apple.common.AccessToken;
 import com.apple.service.WeChatService;
 import com.apple.utils.NetUtils;
@@ -95,6 +95,7 @@ public class WeChatServiceImpl implements WeChatService {
                 responseXml = dealTextMessage(requestMap);
                 break;
             case "image":
+                responseXml = dealImage(requestMap);
                 break;
             case "voice":
                 break;
@@ -103,6 +104,12 @@ public class WeChatServiceImpl implements WeChatService {
             case "music":
                 break;
             case "news":
+                break;
+            case "event": //事件类型，比如点击菜单click  EventKey是click的key
+                String event = requestMap.get("Event");
+                if ("click".equalsIgnoreCase(event)) {
+                    responseXml = dealButtonClick(requestMap);
+                }
                 break;
         }
         return responseXml;
@@ -123,6 +130,34 @@ public class WeChatServiceImpl implements WeChatService {
         }
 
         return accessToken.getAccesstoken();
+    }
+
+
+    /**
+     * 处理发送的图片
+     * @param requestMap
+     * @return
+     */
+    private String dealImage(Map<String, String> requestMap) {
+        TextMessage textMessage = new TextMessage(requestMap, "你发送了图片也~");
+        XStream xStream = new XStream();
+        xStream.processAnnotations(TextMessage.class);//激活注解
+        xStream.alias("xml", TextMessage.class);
+        return xStream.toXML(textMessage);
+    }
+
+
+    /**
+     * 处理菜单点击事件
+     * @param requestMap 服务端接收的数据
+     * @return 服务端反馈的数据
+     */
+    private String dealButtonClick(Map<String, String> requestMap) {
+        TextMessage textMessage = new TextMessage(requestMap, "你点击了"+requestMap.get("EventKey")+"按钮啦~");
+        XStream xStream = new XStream();
+        xStream.processAnnotations(TextMessage.class);//激活注解
+        xStream.alias("xml", TextMessage.class);
+        return xStream.toXML(textMessage);
     }
 
 

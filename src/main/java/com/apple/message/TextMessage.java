@@ -1,4 +1,4 @@
-package com.apple.Message;
+package com.apple.message;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
