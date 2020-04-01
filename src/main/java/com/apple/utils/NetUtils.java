@@ -38,7 +38,7 @@ public class NetUtils {
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
 
-            return response.body().toString();
+            return response.body().string();
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -63,7 +63,7 @@ public class NetUtils {
             //同步请求
             Call call = client.newCall(req);
             Response response = call.execute();
-            return response.body().toString();
+            return response.body().string();
         } catch (IOException e) {
             e.printStackTrace();
             return "";
